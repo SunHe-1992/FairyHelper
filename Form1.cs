@@ -33,7 +33,7 @@ namespace FairyXML2Lua
             startUpPath = Assembly.GetExecutingAssembly().Location;
             startUpPath = Path.GetDirectoryName(startUpPath);
             //test 
-            //startUpPath = @"C:\Project\FF_FairyGui";
+            //startUpPath = @"C:\Project\FF_FairyGui\assets";
             startUpPath = Path.Combine(startUpPath, "assets");
             //ViewAllFolders(startUpPath);
             InitPackNameList();
@@ -410,13 +410,12 @@ namespace FairyXML2Lua
                     }
                 }
             }
- 
 
             //将所有数据打印一遍
             string pngRank = "";
             foreach (var pwa in listPicNeedDel)
             {
-                string line = $"name = {pwa.fullName} imageId={pwa.imageId}"+"\n";
+                string line = $"name = {pwa.fullName} imageId={pwa.imageId}" + "\n";
                 pngRank += line;
             }
 
@@ -505,8 +504,6 @@ namespace FairyXML2Lua
                 }
                 else
                 {
-
-
                     if (fInfo.Extension == ".xml")
                     {
                         if (fInfo.Name == "package.xml")
@@ -530,16 +527,16 @@ namespace FairyXML2Lua
                                     var exported = child.Attributes["exported"];
                                     if (child.Name == "image")
                                     {
-                                        if (exported == null )
+                                        if (exported == null)
                                         {
                                             PictureSourceWithId pwa = new PictureSourceWithId();
-                                            pwa.fullName = child.Attributes["path"].Value + child.Attributes["name"].Value; 
+                                            pwa.fullName = child.Attributes["path"].Value + child.Attributes["name"].Value;
                                             pwa.imageId = fileName;
                                             listPicUseSource.Add(pwa);
                                         }
                                     }
                                     else
-                                    {           
+                                    {
                                         if (child.Attributes["src"] != null)
                                         {
                                             listComUseSource[child.Attributes["src"].Value] = 1;
@@ -564,27 +561,10 @@ namespace FairyXML2Lua
                                 shw = shw + node.ChildNodes.Count + "\\  ";
                                 foreach (XmlNode child in node.ChildNodes)
                                 {
-
-                                    string fileName = child.Attributes["id"].Value;
-                                    var exported = child.Attributes["exported"];
-                                    if (child.Name == "image")
+                                    if (child.Attributes["src"] != null)
                                     {
-                                        if (exported == null)
-                                        {
-                                            PictureSourceWithId pwa = new PictureSourceWithId();
-                                            pwa.fullName = child.Attributes["fileName"].Value;
-                                            pwa.imageId = fileName;
-                                            listPicUseSource.Add(pwa);
-                                        }
+                                        listComUseSource[child.Attributes["src"].Value] = 1;
                                     }
-                                    else
-                                    {
-                                        if (child.Attributes["src"] != null)
-                                        {
-                                            listComUseSource[child.Attributes["src"].Value] = 1;
-                                        }
-                                    }
-
                                 }
 
                             }
@@ -594,6 +574,101 @@ namespace FairyXML2Lua
                 }
             }
 
+        }
+
+        private void btn_UnBold_Click(object sender, EventArgs e)
+        {
+
+            if (string.IsNullOrEmpty(textBox1.Text))
+            {
+                MessageBox.Show("请填写fairy 的包名");
+                return;
+            }
+
+            FindFilesForUnbold(textBox1.Text);
+
+        }
+
+        /// <summary>
+        /// 根据包名 找到对应目录里面需要转lua的xml文件列表
+        /// </summary>
+        /// <param name="packageName"></param>
+        /// <param name="saveLuaPath"></param>
+        void FindFilesForUnbold(string packageName)
+        {
+            //保存最近的输入记录
+            Properties.Settings.Default.recentPackage = packageName;
+            Properties.Settings.Default.Save();
+            packagePath = Path.Combine(startUpPath, packageName);
+            string pacXMLPath = Path.Combine(packagePath, "package.xml");
+            if (File.Exists(pacXMLPath) == false)
+            {
+                MessageBox.Show(packagePath + "找不到 package.xml");
+                return;
+            }
+            List<string> compNameList = new List<string>();
+            XmlDocument doc = new XmlDocument();
+            doc.Load(pacXMLPath);
+            XmlElement root = doc.DocumentElement;
+
+            XmlNodeList resourceNodes = root.SelectNodes("/packageDescription/resources/component");
+            foreach (XmlNode node in resourceNodes)
+            {
+                if (node.Name == "component")
+                {
+                    string fileName = node.Attributes["name"].Value;
+
+                    string path = "";
+                    if (node.Attributes["path"] != null)
+                        path = Path.Combine(node.Attributes["path"].Value, node.Attributes["name"].Value);
+                    else
+                        path = node.Attributes["name"].Value;
+                    compNameList.Add(path);
+                }
+            }
+            foreach (string compName in compNameList)
+            {
+                string path = Path.Combine(packagePath, compName);
+                UnBoldTextInFiles(path);
+            }
+            MessageBox.Show("取消文本粗体完成");
+            //ProcessStartInfo startInfo = new ProcessStartInfo(saveLuaPath, "explorer.exe");
+            //Process.Start(startInfo);
+        }
+        void UnBoldTextInFiles(string inPath)
+        {
+            //读取XML文件
+            XmlDocument doc = new XmlDocument();
+            //正斜杠分离 转换成windows的反斜杠路径
+            string[] pathes = inPath.Split('/');
+            string tempPath = packagePath;
+            foreach (string folder in pathes)
+            {
+                tempPath = Path.Combine(tempPath, folder);
+            }
+            doc.Load(tempPath);
+
+            //XML里面找到内容
+            XmlElement root = doc.DocumentElement;
+            XmlNodeList listNodes = root.SelectNodes("/component/displayList");
+
+            foreach (XmlNode node in listNodes)
+            {
+                foreach (XmlNode child in node.ChildNodes)
+                {
+                    if (child.Name == "text" || child.Name == "richtext")
+                    {
+                        if (child.Attributes["bold"] != null)
+                        {
+                            if (child.Attributes["bold"].Value == "true")
+                            {
+                                child.Attributes["bold"].Value = "false";
+                            }
+                        }
+                    }
+                }
+            }
+            doc.Save(tempPath);
         }
     }
 }
