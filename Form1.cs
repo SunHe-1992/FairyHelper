@@ -576,6 +576,10 @@ namespace FairyXML2Lua
 
         }
 
+        /// <summary>
+        /// 批量操作的次数
+        /// </summary>
+        int batch_count = 0;
         private void btn_UnBold_Click(object sender, EventArgs e)
         {
 
@@ -585,7 +589,7 @@ namespace FairyXML2Lua
                 return;
             }
 
-            FindFilesForUnbold(textBox1.Text);
+            FindFilesForUnbold(textBox1.Text, 1);
 
         }
 
@@ -593,8 +597,8 @@ namespace FairyXML2Lua
         /// 根据包名 找到对应目录里面需要转lua的xml文件列表
         /// </summary>
         /// <param name="packageName"></param>
-        /// <param name="saveLuaPath"></param>
-        void FindFilesForUnbold(string packageName)
+        /// <param name="type">1=取消文本粗体 2=文本描边改成0.15</param>
+        void FindFilesForUnbold(string packageName, int type)
         {
             //保存最近的输入记录
             Properties.Settings.Default.recentPackage = packageName;
@@ -626,16 +630,21 @@ namespace FairyXML2Lua
                     compNameList.Add(path);
                 }
             }
+            batch_count = 0;
             foreach (string compName in compNameList)
             {
                 string path = Path.Combine(packagePath, compName);
-                UnBoldTextInFiles(path);
+                UnBoldTextInFiles(path, type);
             }
-            MessageBox.Show("取消文本粗体完成");
+            if (type == 1)
+                MessageBox.Show($"取消文本粗体完成 操作次数={batch_count}");
+            else if (type == 2)
+                MessageBox.Show($"描边改成0.15完成 操作次数={batch_count}");
+
             //ProcessStartInfo startInfo = new ProcessStartInfo(saveLuaPath, "explorer.exe");
             //Process.Start(startInfo);
         }
-        void UnBoldTextInFiles(string inPath)
+        void UnBoldTextInFiles(string inPath, int type)
         {
             //读取XML文件
             XmlDocument doc = new XmlDocument();
@@ -658,17 +667,47 @@ namespace FairyXML2Lua
                 {
                     if (child.Name == "text" || child.Name == "richtext")
                     {
-                        if (child.Attributes["bold"] != null)
+                        if (type == 1)
                         {
-                            if (child.Attributes["bold"].Value == "true")
+                            if (child.Attributes["bold"] != null)
                             {
-                                child.Attributes["bold"].Value = "false";
+                                if (child.Attributes["bold"].Value == "true")
+                                {
+                                    child.Attributes["bold"].Value = "false";
+                                    batch_count++;
+                                }
+                            }
+                        }
+                        else if (type == 2)
+                        {
+                            if (child.Attributes["strokeColor"] != null &&
+                                child.Attributes["strokeSize"] == null)
+                            {
+                                var newAttr = doc.CreateAttribute("strokeSize");
+                                newAttr.Value = "0.15";
+                                child.Attributes.Append(newAttr);
+                            }
+                            else if (child.Attributes["strokeSize"] != null)
+                            {
+                                child.Attributes["strokeSize"].Value = "0.15";
+                                batch_count++;
                             }
                         }
                     }
                 }
             }
             doc.Save(tempPath);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(textBox1.Text))
+            {
+                MessageBox.Show("请填写fairy 的包名");
+                return;
+            }
+
+            FindFilesForUnbold(textBox1.Text, 2);
         }
     }
 }

@@ -40,6 +40,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
             this.btn_UnBold = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -152,6 +153,16 @@
             this.btn_UnBold.UseVisualStyleBackColor = true;
             this.btn_UnBold.Click += new System.EventHandler(this.btn_UnBold_Click);
             // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(168, 318);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(144, 47);
+            this.button5.TabIndex = 12;
+            this.button5.Text = "文本描边改成0.15";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
             // Form1
             // 
             this.AcceptButton = this.button1;
@@ -159,6 +170,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(324, 387);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.btn_UnBold);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.label4);
@@ -193,6 +205,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button btn_UnBold;
+        private System.Windows.Forms.Button button5;
     }
 }
 
