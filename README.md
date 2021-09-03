@@ -1,2 +1,2 @@
-# FairyXML2Lua
-Convert Fairy XML file to Lua UI file
+# FairyHelper
+Help you do operations to Fairy XML files
