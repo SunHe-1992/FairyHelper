@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="FairyHelper.exe" version="1.0.0.0" publicKeyToken="a055deda08c4a866" language="neutral" processorArchitecture="msil" type="win32" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="FairyHelper" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <commandLine file="FairyHelper.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!--
+          UAC Manifest Options
+          If you want to change the Windows User Account Control level replace the
+          requestedExecutionLevel node with one of the following.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+         If you want to utilize File and Registry Virtualization for backward
+         compatibility then delete the requestedExecutionLevel node.
+    -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CSkin.dll" size="2739712">
+      <assemblyIdentity name="CSkin" version="16.1.14.3" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>vUxr8FZNDfl5/dNw3++38AOKBBwF8aQYW6YLjBVU41E=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="FairyHelper.exe" size="103848">
+      <assemblyIdentity name="FairyHelper" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>34jKh40eQkH0yppWr5CLbb0PiDlRXVG/Lwe6PO5bq9A=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="FairyHelper.exe.config" size="1038">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>EMzQW5fwhmDFtFRzzSFMy3Kw3bSe91T/oGrMHU4sKwA=</dsig:DigestValue>
+    </hash>
+  </file>
+<publisherIdentity name="CN=VGAME\sun.he" issuerKeyHash="d5a2e2ef2ded8af16510aed491fe8a0609422a2a" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>dcNjC/4oirLye++jDweC7SS8YUP3vfAWskBkLktT5BI=</DigestValue></Reference></SignedInfo><SignatureValue>CXNDYsgAMDsVuMaCpmwvx6XD0p/KWyo5Gw1NviVOxpbWYzKC6JB8+acyddzDo8zpNEfdRC07csREBIFzuy8gknCGWyOdJ4MGlOwJEQfsgMyg6KYRtVEaoEPRUy9vUMc9CMrR4mIcbWyyTsw7P8lR1VAoTtmdrIA+pnOGtZlOr8M=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>xPnidK5EXg0kBQfDsEAIpsFnelDB6lltFNaVenCgXy8oSGUY+d9/Dap+J7aV1NVWKU0h0kJddnkb5MxibA2Lw4yxpyOj2eywQMzS3+fl9SN6lj+XkhlEmqPC/gJcEQ5Or2d1duB/b6WsCFXyEV8TnPJ251GAZTFmK2T5iqM7MuU=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="12e4534b2e6440b216f0bdf74361bc24ed82070fa3ef7bf2b28a28fe0b63c375" Description="" Url=""><as:assemblyIdentity name="FairyHelper.exe" version="1.0.0.0" publicKeyToken="a055deda08c4a866" language="neutral" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=VGAME\sun.he</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>YdqetVafXhuG2ikJccat6/QRRRP90rPmIDiTXg5esYs=</DigestValue></Reference></SignedInfo><SignatureValue>caR7eq1kodRD6CbJNdLmXvlrsQ3kMHMe+QTmLcpuWT8efEL5eFuTHIcCVhnkurMsXSlY/djfq7UcJfl+6Wq7K0rgxrbkuJXTONETl/i7Nm6YazqqdruEIvOMRCslJAGln1ykPL39/t7ZBakg9V1vkzc5egWXwd+GphSZku2fcmc=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>xPnidK5EXg0kBQfDsEAIpsFnelDB6lltFNaVenCgXy8oSGUY+d9/Dap+J7aV1NVWKU0h0kJddnkb5MxibA2Lw4yxpyOj2eywQMzS3+fl9SN6lj+XkhlEmqPC/gJcEQ5Or2d1duB/b6WsCFXyEV8TnPJ251GAZTFmK2T5iqM7MuU=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIByTCCATKgAwIBAgIQdImKz0XxX4xLoJzPBw/HETANBgkqhkiG9w0BAQsFADAjMSEwHwYDVQQDHhgAVgBHAEEATQBFAFwAcwB1AG4ALgBoAGUwHhcNMjEwOTAzMDk1MDU0WhcNMjIwOTAzMTU1MDU0WjAjMSEwHwYDVQQDHhgAVgBHAEEATQBFAFwAcwB1AG4ALgBoAGUwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMT54nSuRF4NJAUHw7BACKbBZ3pQwepZbRTWlXpwoF8vKEhlGPnffw2qfie2ldTVVilNIdJCXXZ5G+TMYmwNi8OMsacjo9nssEDM0t/n5fUjepY/l5IZRJqjwv4CXBEOTq9ndXbgf2+lrAhV8hFfE5zydudRgGUxZitk+YqjOzLlAgMBAAEwDQYJKoZIhvcNAQELBQADgYEAgb7o6l+niWN6NXcG5wGsIrPYawe5MU5GvznSPPhEZZOKN3IrcZjvTHAblmtYnZHwuLYSTDWtq9BGcqN//SOPyUwghmE55fdFmg2kQ3ek2A3lq9VQnKTJMLeO1ik987e4pRFhZnfTOrehiHA6cj24wMW5BWxiIGPVoQycZCY+stw=</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>

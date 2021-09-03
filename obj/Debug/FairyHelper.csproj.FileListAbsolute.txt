@@ -1,0 +1,16 @@
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\obj\Debug\FairyXML2Lua.FairyHelperForm.resources
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\obj\Debug\FairyHelper.Properties.Resources.resources
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\obj\Debug\FairyHelper.csproj.GenerateResource.cache
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\obj\Debug\FairyHelper.csproj.CoreCompileInputs.cache
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\bin\Debug\FairyHelper.exe.config
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\bin\Debug\FairyHelper.exe
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\bin\Debug\FairyHelper.pdb
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\bin\Debug\CSkin.dll
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\bin\Debug\CSkin.xml
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\obj\Debug\FairyHelper.exe
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\obj\Debug\FairyHelper.pdb
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\bin\Debug\FairyHelper.exe.manifest
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\bin\Debug\FairyHelper.application
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\obj\Debug\FairyHelper.exe.manifest
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\obj\Debug\FairyHelper.application
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\obj\Debug\FairyHelper.csproj.AssemblyReference.cache

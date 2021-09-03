@@ -26,3 +26,15 @@ C:\WorkSpace\FairyXML2Lua\obj\Debug\FairyXML2Lua.csproj.GenerateResource.cache
 C:\WorkSpace\FairyXML2Lua\obj\Debug\FairyXML2Lua.exe
 C:\WorkSpace\FairyXML2Lua\obj\Debug\FairyXML2Lua.pdb
 C:\Project\FairyXML2Lua\obj\Debug\FairyXML2Lua.csproj.CoreCompileInputs.cache
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\bin\Debug\FairyXML2Lua.exe.config
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\bin\Debug\FairyXML2Lua.exe
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\bin\Debug\FairyXML2Lua.pdb
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\obj\Debug\FairyXML2Lua.csproj.AssemblyReference.cache
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\obj\Debug\FairyXML2Lua.Form1.resources
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\obj\Debug\FairyXML2Lua.Properties.Resources.resources
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\obj\Debug\FairyXML2Lua.csproj.GenerateResource.cache
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\obj\Debug\FairyXML2Lua.csproj.CoreCompileInputs.cache
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\obj\Debug\FairyXML2Lua.exe
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\obj\Debug\FairyXML2Lua.pdb
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\bin\Debug\CSkin.dll
+D:\UserFiles\Documents\GitHub\FairyXML2Lua\bin\Debug\CSkin.xml

@@ -6,10 +6,11 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
-
+using FairyHelper.Properties;
+using CCWin;
 namespace FairyXML2Lua
 {
-    public partial class Form1 : Form
+    public partial class FairyHelperForm : Skin_Mac
     {
         /// <summary>
         /// exe启动路径
@@ -23,20 +24,24 @@ namespace FairyXML2Lua
         /// 包名
         /// </summary>
         string packageName = "";
-        public Form1()
+        public FairyHelperForm()
         {
             InitializeComponent();
 
-            textBox1.Text = Properties.Settings.Default.recentPackage;
-            textBox2.Text = Properties.Settings.Default.savePath;
+            textBox1.Text = Settings.Default.recentPackage;
+            textBox2.Text = Settings.Default.savePath;
 
             startUpPath = Assembly.GetExecutingAssembly().Location;
             startUpPath = Path.GetDirectoryName(startUpPath);
             //test 
-            //startUpPath = @"C:\Project\FF_FairyGui\assets";
+            //startUpPath = @"C:\WorkSpace\ShotClientFGUI\assets";
             startUpPath = Path.Combine(startUpPath, "assets");
             //ViewAllFolders(startUpPath);
             InitPackNameList();
+
+            this.textBox1.Visible = false;
+            this.textBox2.Visible = false;
+            this.button1.Visible = false;
         }
         /// <summary>
         /// 读取包名列表 自动赋值
@@ -92,9 +97,9 @@ namespace FairyXML2Lua
         void FindXMLFiles(string packageName, string saveLuaPath)
         {
             //保存最近的输入记录
-            Properties.Settings.Default.recentPackage = packageName;
-            Properties.Settings.Default.savePath = saveLuaPath;
-            Properties.Settings.Default.Save();
+            Settings.Default.recentPackage = packageName;
+            Settings.Default.savePath = saveLuaPath;
+            Settings.Default.Save();
 
             packagePath = Path.Combine(startUpPath, packageName);
             string pacXMLPath = Path.Combine(packagePath, "package.xml");
@@ -251,7 +256,7 @@ namespace FairyXML2Lua
             template = string.Format(template, fileName, @"{}", fileName, content);
             string finalContent = firstLine + headerContent + template;
             //写入目标位置
-            string dir = Path.Combine(Properties.Settings.Default.savePath, packageName);
+            string dir = Path.Combine(Settings.Default.savePath, packageName);
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
@@ -601,8 +606,8 @@ namespace FairyXML2Lua
         void FindFilesForUnbold(string packageName, int type)
         {
             //保存最近的输入记录
-            Properties.Settings.Default.recentPackage = packageName;
-            Properties.Settings.Default.Save();
+            Settings.Default.recentPackage = packageName;
+            Settings.Default.Save();
             packagePath = Path.Combine(startUpPath, packageName);
             string pacXMLPath = Path.Combine(packagePath, "package.xml");
             if (File.Exists(pacXMLPath) == false)
