@@ -1,13 +1,12 @@
-﻿using System;
+﻿using CCWin;
+using FairyHelper.Properties;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
-using System.Text.RegularExpressions;
-using System.Diagnostics;
-using FairyHelper.Properties;
-using CCWin;
 namespace FairyXML2Lua
 {
     public partial class FairyHelperForm : Skin_Mac
@@ -24,24 +23,27 @@ namespace FairyXML2Lua
         /// 包名
         /// </summary>
         string packageName = "";
+        bool testMode = true;
+        string testStartFolder = @"E:\Work\ShotClientFGUI\";
         public FairyHelperForm()
         {
             InitializeComponent();
 
             textBox1.Text = Settings.Default.recentPackage;
-            textBox2.Text = Settings.Default.savePath;
+
 
             startUpPath = Assembly.GetExecutingAssembly().Location;
             startUpPath = Path.GetDirectoryName(startUpPath);
+
             //test 
-            //startUpPath = @"C:\WorkSpace\ShotClientFGUI\assets";
-            startUpPath = Path.Combine(startUpPath, "assets");
-            //ViewAllFolders(startUpPath);
+            if (testMode)
+                startUpPath = testStartFolder + "assets";
+            else
+                startUpPath = Path.Combine(startUpPath, "assets");
+
             InitPackNameList();
 
             this.textBox1.Visible = false;
-            this.textBox2.Visible = false;
-            this.button1.Visible = false;
         }
         /// <summary>
         /// 读取包名列表 自动赋值
@@ -60,35 +62,35 @@ namespace FairyXML2Lua
                 }
             }
         }
-        void ViewAllFolders(string startUpPath)
-        {
-            foreach (string pathName in Directory.EnumerateDirectories(startUpPath))
-            {
-                Console.WriteLine(Path.GetFileName(pathName));
-            }
+        //void ViewAllFolders(string startUpPath)
+        //{
+        //    foreach (string pathName in Directory.EnumerateDirectories(startUpPath))
+        //    {
+        //        Console.WriteLine(Path.GetFileName(pathName));
+        //    }
 
-        }
+        //}
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(textBox1.Text))
-            {
-                MessageBox.Show("请填写fairy 的包名");
-                return;
-            }
-            if (string.IsNullOrEmpty(textBox2.Text))
-            {
-                MessageBox.Show("请填写导出LUA文件的路径");
-                return;
-            }
-            var folder = Path.Combine(textBox2.Text, textBox1.Text);
-            string[] filePaths = Directory.GetFiles(folder);
-            foreach (string filepath in filePaths)
-            {
-                File.Delete(filepath);
-            }
-            FindXMLFiles(textBox1.Text, textBox2.Text);
-        }
+        //private void button1_Click(object sender, EventArgs e)
+        //{
+        //    if (string.IsNullOrEmpty(textBox1.Text))
+        //    {
+        //        MessageBox.Show("请填写fairy 的包名");
+        //        return;
+        //    }
+        //    if (string.IsNullOrEmpty(textBox2.Text))
+        //    {
+        //        MessageBox.Show("请填写导出LUA文件的路径");
+        //        return;
+        //    }
+        //    var folder = Path.Combine(textBox2.Text, textBox1.Text);
+        //    string[] filePaths = Directory.GetFiles(folder);
+        //    foreach (string filepath in filePaths)
+        //    {
+        //        File.Delete(filepath);
+        //    }
+        //    FindXMLFiles(textBox1.Text, textBox2.Text);
+        //}
         /// <summary>
         /// 根据包名 找到对应目录里面需要转lua的xml文件列表
         /// </summary>
@@ -301,6 +303,15 @@ namespace FairyXML2Lua
         HashSet<string> fileNameSet = new HashSet<string>();
         string fileNameHint = "";
         string charHint = "";
+        string GetStartFolder()
+        {
+            string startFolder = null;
+            if (testMode)
+                startFolder = testStartFolder + "FairyXML2Lua.exe";
+            else
+                startFolder = Assembly.GetExecutingAssembly().Location;
+            return startFolder;
+        }
         /// <summary>
         /// 查询重名文件
         /// </summary>
@@ -308,9 +319,7 @@ namespace FairyXML2Lua
         /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
-            string startFolder = Assembly.GetExecutingAssembly().Location;
-            //test 
-            //startFolder = @"C:\Project\FF_FairyGui\FairyXML2Lua.exe";
+            string startFolder = GetStartFolder();
 
             startFolder = Path.GetDirectoryName(startFolder);
             startFolder = Path.Combine(startFolder, "assets");
@@ -365,9 +374,7 @@ namespace FairyXML2Lua
                 MessageBox.Show("请填写fairy 的包名");
                 return;
             }
-            string startFolder = Assembly.GetExecutingAssembly().Location;
-            //test 
-            //startFolder = @"C:\Project\FF_FairyGui\FairyXML2Lua.exe";
+            string startFolder = GetStartFolder();
 
             startFolder = Path.GetDirectoryName(startFolder);
             startFolder = Path.Combine(startFolder, "assets", textBox1.Text);
@@ -394,9 +401,7 @@ namespace FairyXML2Lua
                 MessageBox.Show("请填写fairy 的包名");
                 return;
             }
-            string startFolder = Assembly.GetExecutingAssembly().Location;
-            //test 
-            //startFolder = @"C:\Project\FF_FairyGui\FairyXML2Lua.exe";
+            string startFolder = GetStartFolder();
 
             startFolder = Path.GetDirectoryName(startFolder);
             startFolder = Path.Combine(startFolder, "assets", textBox1.Text);
@@ -594,17 +599,23 @@ namespace FairyXML2Lua
                 return;
             }
 
-            FindFilesForUnbold(textBox1.Text, 1);
+            FindFilesForUnbold(textBox1.Text, TextOperType.UNBOLD);
 
         }
-
+        enum TextOperType
+        {
+            UNBOLD = 1,
+            MISSING_TXT = 2,
+        }
         /// <summary>
         /// 根据包名 找到对应目录里面需要转lua的xml文件列表
         /// </summary>
         /// <param name="packageName"></param>
-        /// <param name="type">1=取消文本粗体 2=文本描边改成0.15</param>
-        void FindFilesForUnbold(string packageName, int type)
+        /// <param name="type">1=取消文本粗体 2=查询文本缺失多语言</param>
+        void FindFilesForUnbold(string packageName, TextOperType type)
         {
+            if (textInfoDic == null)
+                textInfoDic = new Dictionary<string, List<UITextInfo>>();
             //保存最近的输入记录
             Settings.Default.recentPackage = packageName;
             Settings.Default.Save();
@@ -639,17 +650,20 @@ namespace FairyXML2Lua
             foreach (string compName in compNameList)
             {
                 string path = Path.Combine(packagePath, compName);
-                UnBoldTextInFiles(path, type);
+                OperateTextInFiles(path, type);
             }
-            if (type == 1)
+            if (type == TextOperType.UNBOLD)
                 MessageBox.Show($"取消文本粗体完成 操作次数={batch_count}");
-            else if (type == 2)
-                MessageBox.Show($"描边改成0.15完成 操作次数={batch_count}");
+            else if (type == TextOperType.MISSING_TXT)
+            {
+
+                SaveTextInfo();
+            }
 
             //ProcessStartInfo startInfo = new ProcessStartInfo(saveLuaPath, "explorer.exe");
             //Process.Start(startInfo);
         }
-        void UnBoldTextInFiles(string inPath, int type)
+        void OperateTextInFiles(string inPath, TextOperType type)
         {
             //读取XML文件
             XmlDocument doc = new XmlDocument();
@@ -661,7 +675,11 @@ namespace FairyXML2Lua
                 tempPath = Path.Combine(tempPath, folder);
             }
             doc.Load(tempPath);
-
+            curFileName = Path.GetFileNameWithoutExtension(tempPath);
+            if (tempPath == @"C:\WorkSpace\ShotClientFGUI\assets\CaveSky\界面\GoblinMiningUI.xml")
+            {
+                ;
+            }
             //XML里面找到内容
             XmlElement root = doc.DocumentElement;
             XmlNodeList listNodes = root.SelectNodes("/component/displayList");
@@ -670,35 +688,48 @@ namespace FairyXML2Lua
             {
                 foreach (XmlNode child in node.ChildNodes)
                 {
-                    if (child.Name == "text" || child.Name == "richtext")
+                    #region 查询缺失文本
+                    if (type == TextOperType.MISSING_TXT)
                     {
-                        if (type == 1)
+                        string cName = child.Name;
+                        if (cName == "text" || cName == "richtext")
                         {
-                            if (child.Attributes["bold"] != null)
-                            {
-                                if (child.Attributes["bold"].Value == "true")
-                                {
-                                    child.Attributes["bold"].Value = "false";
-                                    batch_count++;
-                                }
-                            }
+                            //文本专用检测
+                            CheckMissingTxt_text(child);
                         }
-                        else if (type == 2)
+                        //组件 带Button Label 并且带title
+                        else if (cName == "component")
                         {
-                            if (child.Attributes["strokeColor"] != null &&
-                                child.Attributes["strokeSize"] == null)
-                            {
-                                var newAttr = doc.CreateAttribute("strokeSize");
-                                newAttr.Value = "0.15";
-                                child.Attributes.Append(newAttr);
-                            }
-                            else if (child.Attributes["strokeSize"] != null)
-                            {
-                                child.Attributes["strokeSize"].Value = "0.15";
-                                batch_count++;
-                            }
+                            CheckMissingTxt_comp(child);
                         }
                     }
+                    #endregion
+
+                    #region 粗体文本处理
+
+                    if (type == TextOperType.UNBOLD)
+                        if (child.Name == "text" || child.Name == "richtext")
+                        {
+                            {
+                                if (child.Attributes["bold"] != null)
+                                {
+                                    if (child.Attributes["bold"].Value == "true")
+                                    {
+                                        child.Attributes["bold"].Value = "false";
+                                        batch_count++;
+                                    }
+                                }
+                            }
+                            //else if (type == 3)
+                            //{
+                            //    var abs = child.Attributes;
+                            //    if (abs["font"] != null)
+                            //    {
+                            //        fontHash.Add(abs["font"].Value);
+                            //    }
+                            //}
+                        }
+                    #endregion
                 }
             }
             doc.Save(tempPath);
@@ -712,7 +743,184 @@ namespace FairyXML2Lua
                 return;
             }
 
-            FindFilesForUnbold(textBox1.Text, 2);
+            FindFilesForUnbold(textBox1.Text, TextOperType.MISSING_TXT);
+        }
+
+        HashSet<string> fontHash;
+        private void button6_Click(object sender, EventArgs e)
+        {
+            //if (string.IsNullOrEmpty(textBox1.Text))
+            //{
+            //    MessageBox.Show("请填写fairy 的包名");
+            //    return;
+            //}
+            //fontHash = new HashSet<string>();
+            //FindFilesForUnbold(textBox1.Text, 3);
+
+            //string output = "";
+            //foreach (string s in fontHash)
+            //{
+            //    output += s + "\n";
+            //}
+            //MessageBox.Show(output);
+
+        }
+
+
+        #region 检查这个node 是 button/label/text, title是汉字,没有配置txtkey
+        public class UITextInfo
+        {
+            /// <summary>
+            /// 组件名称
+            /// </summary>
+            public string compName;
+            /// <summary>
+            /// 内容
+            /// </summary>
+            public string content;
+            /// <summary>
+            /// 自定义数据
+            /// </summary>
+            public string cusData;
+        }
+
+        string curFileName = "";
+        public Dictionary<string, List<UITextInfo>> textInfoDic;
+        private void SaveTextInfo()
+        {
+            int count = 0;
+            string allContent = "";
+            foreach (var pair in textInfoDic)
+            {
+                allContent += $"\n文件名={pair.Key}\n";
+                foreach (var info in pair.Value)
+                {
+                    allContent += $"组件名={info.compName} 文本={info.content}\n";
+                    count++;
+                }
+            }
+            File.WriteAllText($"D://缺失的多语言.txt", allContent);
+
+            MessageBox.Show($"查询缺失TXT完成 结果数量={count} 保存结果到D盘");
+
+        }
+        /// <summary>
+        /// text对象缺失文本检测
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private bool CheckMissingTxt_text(XmlNode node)
+        {
+            //没有配置自定义数据?
+            string name = node.Attributes["name"].Value.ToString();
+            bool isNameless = StringHelper.IsNameless(name);
+
+            bool autoClearText = false;//导出清空
+            if (node.Attributes["autoClearText"] != null)
+                autoClearText = node.Attributes["autoClearText"].Value == "true";
+            string customData = null;//自定义数据 
+            if (node.Attributes["customData"] != null)
+                customData = node.Attributes["customData"].Value;
+            bool haveTxtKey = StringHelper.IsTxtKey(customData);
+
+            string contentText = null; //默认文本
+            if (node.Attributes["text"] != null)
+                contentText = node.Attributes["text"].Value;
+            bool haveChineseText = StringHelper.HaveChinese(contentText);
+            //没有变量名 文本已导出 没有TXT
+            if (isNameless && autoClearText == false && haveTxtKey == false)
+            {
+                //这个文本需要添加TXT
+                UITextInfo txtInfo = new UITextInfo()
+                {
+                    compName = name,
+                    cusData = customData,
+                    content = contentText,
+                };
+                if (textInfoDic.ContainsKey(curFileName) == false)
+                    textInfoDic[curFileName] = new List<UITextInfo>();
+                textInfoDic[curFileName].Add(txtInfo);
+            }
+
+            //if (haveTxtKey == false && StringHelper.IsTxtKey(name))
+            //{
+            //}
+            return false;
+        }
+        private bool CheckMissingTxt_comp(XmlNode upNode)
+        {
+            /* 1.是 text richtext label button 其中之一
+             * 2.没有配置自定义数据
+             * 3.没有设置为导出时清空 
+             * 4.title包含中文
+             * 5.组件名称 是 n10
+             */
+            string name = upNode.Attributes["name"].Value.ToString();
+
+
+            bool isNameless = StringHelper.IsNameless(name);
+            string customData = null;//自定义数据 
+            if (upNode.Attributes["customData"] != null)
+                customData = upNode.Attributes["customData"].Value;
+            bool haveTxtKey = StringHelper.IsTxtKey(customData);
+
+            bool haveChineseContent = false;
+            string _content = null;
+
+            for (int i = 0; i < upNode.ChildNodes.Count; i++)
+            {
+                XmlNode node = upNode.ChildNodes[i];
+                if (node.Name == "Button" || node.Name == "Label")
+                {
+                    if (node.Attributes["title"] != null)
+                    {
+                        _content = node.Attributes["title"].Value;
+                        haveChineseContent = StringHelper.HaveChinese(_content);//有配置中文
+                    }
+                }
+            }
+            if (haveTxtKey == false && haveChineseContent)
+            {
+                //这个文本需要添加TXT
+                UITextInfo txtInfo = new UITextInfo()
+                {
+                    compName = name,
+                    cusData = customData,
+                    content = _content,
+                };
+                if (textInfoDic.ContainsKey(curFileName) == false)
+                    textInfoDic[curFileName] = new List<UITextInfo>();
+                textInfoDic[curFileName].Add(txtInfo);
+            }
+            return false;
+        }
+        #endregion
+    }
+
+    public static class StringHelper
+    {
+        /// <summary>
+        /// n+数字的变量名
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public static bool IsNameless(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+                return true;
+            return Regex.IsMatch(content, "^n[0-9]+");
+        }
+        public static bool HaveChinese(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+                return false;
+            return Regex.IsMatch(content, "[\u4e00-\u9fa5]+");
+        }
+        public static bool IsTxtKey(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+                return false;
+            return Regex.IsMatch(content, "^TXT-");
         }
     }
 }
