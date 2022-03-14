@@ -23,7 +23,7 @@ namespace FairyXML2Lua
         /// 包名
         /// </summary>
         string packageName = "";
-        bool testMode = true;
+        bool testMode = false;
         string testStartFolder = @"E:\Work\ShotClientFGUI\";
         public FairyHelperForm()
         {
