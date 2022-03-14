@@ -799,7 +799,7 @@ namespace FairyXML2Lua
                     count++;
                 }
             }
-            File.WriteAllText($"D://缺失的多语言.txt", allContent);
+            File.WriteAllText($"D://缺失的多语言{ Settings.Default.recentPackage}.txt", allContent);
 
             MessageBox.Show($"查询缺失TXT完成 结果数量={count} 保存结果到D盘");
 
