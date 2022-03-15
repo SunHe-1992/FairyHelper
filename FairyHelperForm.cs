@@ -44,6 +44,8 @@ namespace FairyXML2Lua
             InitPackNameList();
 
             this.textBox1.Visible = false;
+
+            textBoxLanguage.Text = Settings.Default.zhcnPath;
         }
         /// <summary>
         /// 读取包名列表 自动赋值
@@ -101,8 +103,6 @@ namespace FairyXML2Lua
             //保存最近的输入记录
             Settings.Default.recentPackage = packageName;
             Settings.Default.savePath = saveLuaPath;
-            Settings.Default.Save();
-
             packagePath = Path.Combine(startUpPath, packageName);
             string pacXMLPath = Path.Combine(packagePath, "package.xml");
             if (File.Exists(pacXMLPath) == false)
@@ -599,7 +599,7 @@ namespace FairyXML2Lua
                 return;
             }
 
-            FindFilesForUnbold(textBox1.Text, TextOperType.UNBOLD);
+            FindFilesBatchOperation(textBox1.Text, TextOperType.UNBOLD);
 
         }
         enum TextOperType
@@ -612,7 +612,7 @@ namespace FairyXML2Lua
         /// </summary>
         /// <param name="packageName"></param>
         /// <param name="type">1=取消文本粗体 2=查询文本缺失多语言</param>
-        void FindFilesForUnbold(string packageName, TextOperType type)
+        void FindFilesBatchOperation(string packageName, TextOperType type)
         {
             if (textInfoDic == null)
                 textInfoDic = new Dictionary<string, List<UITextInfo>>();
@@ -636,9 +636,8 @@ namespace FairyXML2Lua
             {
                 if (node.Name == "component")
                 {
-                    string fileName = node.Attributes["name"].Value;
-
-                    string path = "";
+                    _ = node.Attributes["name"].Value;
+                    string path;
                     if (node.Attributes["path"] != null)
                         path = Path.Combine(node.Attributes["path"].Value, node.Attributes["name"].Value);
                     else
@@ -676,10 +675,6 @@ namespace FairyXML2Lua
             }
             doc.Load(tempPath);
             curFileName = Path.GetFileNameWithoutExtension(tempPath);
-            if (tempPath == @"C:\WorkSpace\ShotClientFGUI\assets\CaveSky\界面\GoblinMiningUI.xml")
-            {
-                ;
-            }
             //XML里面找到内容
             XmlElement root = doc.DocumentElement;
             XmlNodeList listNodes = root.SelectNodes("/component/displayList");
@@ -742,8 +737,13 @@ namespace FairyXML2Lua
                 MessageBox.Show("请填写fairy 的包名");
                 return;
             }
-
-            FindFilesForUnbold(textBox1.Text, TextOperType.MISSING_TXT);
+            if (string.IsNullOrEmpty(textBoxLanguage.Text))
+            {
+                MessageBox.Show("请填写zh-CN.txt的路径");
+                return;
+            }
+            ReadZHCNFile();
+            FindFilesBatchOperation(textBox1.Text, TextOperType.MISSING_TXT);
         }
 
         HashSet<string> fontHash;
@@ -795,7 +795,14 @@ namespace FairyXML2Lua
                 allContent += $"\n文件名={pair.Key}\n";
                 foreach (var info in pair.Value)
                 {
-                    allContent += $"组件名={info.compName} 文本={info.content}\n";
+                    string curKey = null;
+                    if (langDic.ContainsKey(info.content))
+                    {
+                        curKey = langDic[info.content];
+                        allContent += $"组件名={info.compName} 文本={info.content} 已有={curKey}\n";
+                    }
+                    else
+                        allContent += $"组件名={info.compName} 文本={info.content}\n";
                     count++;
                 }
             }
@@ -895,6 +902,32 @@ namespace FairyXML2Lua
             return false;
         }
         #endregion
+
+        #region 读取缓存当前的多语言文件
+        Dictionary<string, string> langDic;
+        private void ReadZHCNFile()
+        {
+            Settings.Default.zhcnPath = textBoxLanguage.Text;
+            langDic = new Dictionary<string, string>();
+            //读取zh-CN
+            string[] allLines = File.ReadAllLines(textBoxLanguage.Text);
+            foreach (string line in allLines)
+            {
+                if (string.IsNullOrEmpty(line))
+                    continue;
+                string txtStr = Regex.Match(line, @"^.*(?<=( = ))").Value;
+                string contentStr = line.Substring(txtStr.Length, line.Length - txtStr.Length);
+                txtStr = txtStr.Substring(0, txtStr.Length - 3);
+                langDic[contentStr] = txtStr;
+            }
+        }
+
+        #endregion
+
+        private void FairyHelperForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Settings.Default.Save();
+        }
     }
 
     public static class StringHelper
@@ -923,4 +956,6 @@ namespace FairyXML2Lua
             return Regex.IsMatch(content, "^TXT-");
         }
     }
+
+
 }
