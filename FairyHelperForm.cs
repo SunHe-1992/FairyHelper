@@ -742,6 +742,7 @@ namespace FairyXML2Lua
                 MessageBox.Show("请填写zh-CN.txt的路径");
                 return;
             }
+            textInfoDic = new Dictionary<string, List<UITextInfo>>();
             ReadZHCNFile();
             FindFilesBatchOperation(textBox1.Text, TextOperType.MISSING_TXT);
         }
