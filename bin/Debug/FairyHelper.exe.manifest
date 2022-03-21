@@ -54,24 +54,24 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="FairyHelper.exe" size="103848">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="FairyHelper.exe" size="107944">
       <assemblyIdentity name="FairyHelper" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>81+6uvxsyN7jyQUku2Tp4UV4B+gURC2WhdSzmRORS0c=</dsig:DigestValue>
+        <dsig:DigestValue>f0Rr+EFqkmYTtR1d5EX22OkDWGG8nQzCbpNqV5fYqyE=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="FairyHelper.exe.config" size="1038">
+  <file name="FairyHelper.exe.config" size="1718">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>EMzQW5fwhmDFtFRzzSFMy3Kw3bSe91T/oGrMHU4sKwA=</dsig:DigestValue>
+      <dsig:DigestValue>zUFLLqXvt/7hVZDrgJpNCiZVL6mbM37yuA6PToFieSQ=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>
