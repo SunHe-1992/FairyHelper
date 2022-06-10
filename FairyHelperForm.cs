@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
@@ -24,7 +25,7 @@ namespace FairyXML2Lua
         /// </summary>
         string packageName = "";
         bool testMode = false;
-        string testStartFolder = @"E:\Work\ShotClientFGUI\";
+        string testStartFolder = @"C:\WorkSpace\ShotClientFGUI\";
         public FairyHelperForm()
         {
             InitializeComponent();
@@ -598,7 +599,7 @@ namespace FairyXML2Lua
                 MessageBox.Show("请填写fairy 的包名");
                 return;
             }
-
+            changeCountInFile = 0;
             FindFilesBatchOperation(textBox1.Text, TextOperType.UNBOLD);
 
         }
@@ -606,6 +607,7 @@ namespace FairyXML2Lua
         {
             UNBOLD = 1,
             MISSING_TXT = 2,
+            BUTTON_SOUND = 3,
         }
         /// <summary>
         /// 根据包名 找到对应目录里面需要转lua的xml文件列表
@@ -662,6 +664,7 @@ namespace FairyXML2Lua
             //ProcessStartInfo startInfo = new ProcessStartInfo(saveLuaPath, "explorer.exe");
             //Process.Start(startInfo);
         }
+        XmlDocument curDoc;
         void OperateTextInFiles(string inPath, TextOperType type)
         {
             //读取XML文件
@@ -678,7 +681,7 @@ namespace FairyXML2Lua
             //XML里面找到内容
             XmlElement root = doc.DocumentElement;
             XmlNodeList listNodes = root.SelectNodes("/component/displayList");
-
+            curDoc = doc;
             foreach (XmlNode node in listNodes)
             {
                 foreach (XmlNode child in node.ChildNodes)
@@ -725,9 +728,45 @@ namespace FairyXML2Lua
                             //}
                         }
                     #endregion
+
+                    #region 按钮音效检查
+                    if (type == TextOperType.BUTTON_SOUND)
+                    {
+                        string cName = child.Name;
+                        if (cName == "component")
+                        {
+                            CheckMissingSound_Button(child);
+                        }
+                    }
+                    #endregion
                 }
             }
-            doc.Save(tempPath);
+
+            if (changeCountInFile > 0)
+            {
+                var settings = new XmlWriterSettings();
+                settings.Indent = false;
+                settings.OmitXmlDeclaration = false;
+                settings.NewLineOnAttributes = true;
+                //settings.IndentChars = "    ";
+                //settings.Encoding = Encoding.UTF8;
+                //settings.NewLineHandling = System.Xml.NewLineHandling.Replace;
+                //settings.ConformanceLevel = System.Xml.ConformanceLevel.Document;
+                //settings.NewLineChars= "\r\n";
+                var txtWritter = new XmlTextWriter(tempPath, new UTF8Encoding(false));
+                txtWritter.Formatting = Formatting.Indented;
+                var xmlWritter = XmlWriter.Create(txtWritter, settings);
+                using (xmlWritter)
+                {
+                    doc.Save(xmlWritter);
+                    xmlWritter.Flush();
+                    xmlWritter.Dispose();
+                    string saved = File.ReadAllText(tempPath);
+                    saved = Regex.Replace(saved, " />", "/>");
+                    File.WriteAllText(tempPath, saved);
+                }
+                //doc.Save(tempPath);
+            }
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -744,6 +783,7 @@ namespace FairyXML2Lua
             }
             textInfoDic = new Dictionary<string, List<UITextInfo>>();
             ReadZHCNFile();
+            changeCountInFile = 0;
             FindFilesBatchOperation(textBox1.Text, TextOperType.MISSING_TXT);
         }
 
@@ -925,9 +965,75 @@ namespace FairyXML2Lua
 
         #endregion
 
+        #region 按钮音效检测
+        static readonly string sound_click = "ui://g2fjgz25od3r3";
+        static readonly string sound_close = "ui://g2fjgz25od3r1";
+        static readonly string sound_tab = "ui://g2fjgz25od3r6";
+
+        private bool CheckMissingSound_Button(XmlNode upNode)
+        {
+            /* 1.是  button 
+             * 2.没有配置音效
+             */
+            string compName = upNode.Attributes["name"].Value.ToString();
+            bool haveSound = false;
+            bool isButton = false;
+            XmlNode btnNode = null;
+            for (int i = 0; i < upNode.ChildNodes.Count; i++)
+            {
+                XmlNode node = upNode.ChildNodes[i];
+                if (node.Name == "Button")
+                {
+                    btnNode = node;
+                    isButton = true;
+                    if (node.Attributes["sound"] != null)
+                    {
+                        haveSound = true;
+                    }
+                    else
+                    {
+                        if (curDoc != null)
+                        {
+                            var xab = curDoc.CreateAttribute("sound");
+                            if (StringHelper.IsCloseButtonName(compName))
+                            {
+                                xab.Value = sound_close;
+
+                            }
+                            else if (StringHelper.IsTabButtonName(compName))
+                            {
+                                xab.Value = sound_tab;
+                            }
+                            else
+                                xab.Value = sound_click;
+                            soundCheckLog += $"{curFileName} {compName} add sound {xab.Value}\n";
+                            changeCountInFile++;
+                            node.Attributes.Append(xab);
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        #endregion
+
         private void FairyHelperForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             Settings.Default.Save();
+        }
+        string soundCheckLog;
+        int changeCountInFile;
+        private void button_soundCheck_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(textBox1.Text))
+            {
+                MessageBox.Show("请填写fairy 的包名");
+                return;
+            }
+            soundCheckLog = "";
+            changeCountInFile = 0;
+            FindFilesBatchOperation(textBox1.Text, TextOperType.BUTTON_SOUND);
+            MessageBox.Show($"音效添加次数{changeCountInFile}\n" + soundCheckLog);
         }
     }
 
@@ -955,6 +1061,14 @@ namespace FairyXML2Lua
             if (string.IsNullOrEmpty(content))
                 return false;
             return Regex.IsMatch(content, "^TXT-");
+        }
+        public static bool IsCloseButtonName(string content)
+        {
+            return (content.Contains("_close"));
+        }
+        public static bool IsTabButtonName(string content)
+        {
+            return (content.Contains("tab"));
         }
     }
 
